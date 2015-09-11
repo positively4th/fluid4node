@@ -1,0 +1,10 @@
+{
+  "name": "fluid4node",
+  "version": "0.0.0",
+  "description": "FluidSynth node bindings.",
+  "main": "addon.js",
+  "private": true,
+  "gypfile": true,
+  "dependencies": {
+  }
+}
