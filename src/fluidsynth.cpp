@@ -2,6 +2,7 @@
 #include "fluidsynth.h"
 #include <fluidsynth.h>
 
+//#include <iostream>
 #include <string>
 #include <node.h>
 
@@ -25,7 +26,7 @@ void FluidSynth::Init(v8::Local<v8::Object> exports, v8::Local<v8::Object> modul
   v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
   v8::Local<v8::String> className = Nan::New("Fluid").ToLocalChecked();
   tpl->SetClassName(className);
-  tpl->InstanceTemplate()->SetInternalFieldCount(6);
+  tpl->InstanceTemplate()->SetInternalFieldCount(7);
   //Prototype
   Nan::SetPrototypeMethod(tpl, "settings_setstr", FluidSynth::settings_setstr);
   Nan::SetPrototypeMethod(tpl, "synth_sfload", FluidSynth::synth_sfload);
@@ -33,6 +34,7 @@ void FluidSynth::Init(v8::Local<v8::Object> exports, v8::Local<v8::Object> modul
   Nan::SetPrototypeMethod(tpl, "synth_noteon", FluidSynth::synth_noteon);
   Nan::SetPrototypeMethod(tpl, "synth_noteoff", FluidSynth::synth_noteoff);
   Nan::SetPrototypeMethod(tpl, "synth_program_change", FluidSynth::synth_program_change);
+  Nan::SetPrototypeMethod(tpl, "synth_set_gain", FluidSynth::synth_set_gain);
 
   constructor.Reset(tpl->GetFunction());
   v8::Local<v8::String> xkey = Nan::New("exports").ToLocalChecked();
@@ -104,6 +106,12 @@ NAN_METHOD(FluidSynth::synth_program_change) {
   int prognum = info[1]->IntegerValue();	
   v8::Local<v8::Value> res = Nan::New<v8::Integer>(fluid_synth_program_change(_this->synth.get(), chan, prognum));	
   info.GetReturnValue().Set(res);	 
+}
+
+NAN_METHOD(FluidSynth::synth_set_gain) {
+  FluidSynth* _this = ObjectWrap::Unwrap<FluidSynth>(info.This());
+  float gain = info[0]->NumberValue();	
+  fluid_synth_set_gain(_this->synth.get(), gain);	
 }
 
 
