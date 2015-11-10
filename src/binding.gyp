@@ -9,7 +9,10 @@
 		}
 		]
 	    ],
-	    "sources": [ "fluid4node_4_2_1.cpp", "fluidsynth_4_2_1.h", "fluidsynth_4_2_1.cpp" ],
+	    "sources": [ "fluid4node.cpp", "fluidsynth.h", "fluidsynth.cpp" ],
+	    "include_dirs" : [
+	    	"<!(node -e \"require('nan')\")"
+	    ],
 	    "libraries": ["/usr/lib/x86_64-linux-gnu/libfluidsynth.so.1"]
  	}
     ]

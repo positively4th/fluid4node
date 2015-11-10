@@ -1,21 +1,23 @@
 {
   "name": "fluid4node",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "FluidSynth node bindings.",
   "main": "src/build/Release/fluid4node.node",
   "private": false,
   "gypfile": true,
-  "dependencies": {},
+  "dependencies": {
+    "nan": "^2.1.0"
+  },
   "directories": {
-      "lib": "src/Build/",
-      "test": "test"
+    "lib": "src/Build/",
+    "test": "test"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/positively4th/fluid4note.git"
+    "url": "https://github.com/positively4th/fluid4node.git"
   },
   "keywords": [
     "synth",
@@ -25,6 +27,6 @@
   "author": "Klas <klas.sanden@yahoo.se> (http://89.221.241.57/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/positively4th/fluid4note/issues"
+    "url": "https://github.com/positively4th/fluid4node/issues"
   }
 }
