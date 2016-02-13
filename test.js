@@ -1,6 +1,11 @@
-var fs = require ('fs');
-var Fluid = require ('./build/Release/fluid4node');
-
+try {
+var f4n = require('./fluid4node.js')();
+} catch (e) {
+    console.log(e.message);
+    throw (e);
+}
+console.log('f4n', f4n);
+    
 var todos = [
     {chan: 0, program: 0, key: 60, gain: 1.0},
     {chan: 0, program: 0, key: 61, gain: 0.7},
@@ -14,22 +19,21 @@ var todos = [
 
 function helper(index) {
     if (index - 1 >= 0) {
-	fluid.synth_noteoff(todos[index-1].chan, todos[index-1].key);
+	f4n.noteOff(todos[index-1].chan, todos[index-1].key);
     }
     if (index >= todos.length) {
+	f4n.destroy();
+	console.log('done');
 	return;
     }
 
-    fluid.synth_program_change(todos[index].chan, todos[index].program);
-    fluid.synth_set_gain(todos[index].gain);
-    fluid.synth_noteon(todos[index].chan, todos[index].key, 100);
+    f4n.programChange(todos[index].chan, todos[index].program);
+    f4n.setGain(todos[index].gain);
+    f4n.noteOn(todos[index].chan, todos[index].key, 100);
     setTimeout(function() {
 	helper(index + 1);
     }, 200);
 }
-helper(0);
-fluid = new Fluid();
-fluid.settings_setstr("audio.driver", "alsa");
-fluid.synth_sfload("/usr/share/sounds/sf2/FluidR3_GM.sf2", 1);	
-fluid.new_audio_driver();
+
+
 helper(0);

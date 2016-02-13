@@ -1,5 +1,5 @@
 //#define BUILDING_NODE_EXTENSION
-#include "fluidsynth.h"
+#include "synth.h"
 #include <fluidsynth.h>
 
 //#include <iostream>

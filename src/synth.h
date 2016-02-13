@@ -1,5 +1,5 @@
-#ifndef FLUIDSYNTH_H
-#define FLUIDSYNTH_H
+#ifndef SYNTH_H
+#define SYNTH_H
 
 #include <map>
 #include <memory>

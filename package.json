@@ -1,12 +1,14 @@
 {
   "name": "fluid4node",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "FluidSynth node bindings.",
-  "main": "src/build/Release/fluid4node.node",
+  "main": "src/build/Release/fluid4node.js",
   "private": false,
-  "gypfile": true,
+  "gypfile": false,
   "dependencies": {
-    "nan": "^2.1.0"
+    "ffi": "^2.0.0",
+    "nan": "^2.1.0",
+    "ref": "^1.3.2"
   },
   "directories": {
     "lib": "src/Build/",
