@@ -1,5 +1,5 @@
 try {
-var f4n = require('./fluid4node.js')();
+    var f4n = require('./fluid4node.js')({});
 } catch (e) {
     console.log(e.message);
     throw (e);

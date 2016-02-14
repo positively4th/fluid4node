@@ -1,13 +1,21 @@
+var os = require('os');
 var ffi = require('ffi');
 var ref = require('ref');
 
+
+var osType = os.type();
+
 var FLUID_FAILED = -1;
 
-var fluid_settings_t  = ref.refType(ref.types.void);
-var fluid_synth_t = ref.refType(ref.types.void);
-var fluid_audio_driver_t = ref.refType(ref.types.void);
-var char_ptr  = ref.types.CString;
+var char_ptr  = ffi.types.CString;
+var void_ptr  = ref.refType(ffi.types.void);
+var fluid_settings_t  = ref.refType(ffi.types.void);
+var fluid_synth_t = ref.refType(ffi.types.void);
+var fluid_audio_driver_t = ref.refType(ffi.types.void);
+var fluid_settings_foreach_option_t = ref.refType(ffi.types.void);
 
+//console.log(ffi.types);
+console.log(ffi);
 function Fluid4NodeError(message) {
     this.name = 'Fluid4NodeError';
     this.message = message;
@@ -27,6 +35,8 @@ var libSpec = {
     'fluid_synth_noteoff': ['int', [fluid_synth_t, 'int', 'int']],
     'fluid_synth_program_change': ['int', [fluid_synth_t, 'int', 'int']],
     'fluid_synth_set_gain': [ 'void', [ fluid_synth_t, 'float'] ],
+    'fluid_settings_foreach_option': ['void', [fluid_settings_t, char_ptr, void_ptr, fluid_settings_foreach_option_t]]
+//    'fluid_settings_foreach_option': ['void', [fluid_settings_t, char_ptr, void_ptr, 'pointer']]
 };
 
 function initLib(libs) {
@@ -46,19 +56,34 @@ function initLib(libs) {
 }
 
 function initSynth(lib, settings, drivers) {
+
     var synth = lib.new_fluid_synth(settings);
+
+    var driverMask = {};
+    lib.fluid_settings_foreach_option(settings, "audio.driver", null,
+				      ffi.Callback('void', [void_ptr, char_ptr, char_ptr],
+						   function (data, name, option) {
+						       driverMask[option] = true;
+						   })
+				     );
     
     var res;
     var i = 0;
+    var drv;
     while (i < drivers.length) {
+	drv = drivers[i++];
+	if (!driverMask[drv]) {
+	    console.log('Unknown driver: ' + drv);
+	    continue;
+	}
 	try {
-	    lib.fluid_settings_setstr(settings, "audio.driver", drivers[i++]);
-	    res = lib.new_fluid_audio_driver(settings, synth); '';
+	    lib.fluid_settings_setstr(settings, "audio.driver", drv);
+	    res = lib.new_fluid_audio_driver(settings, synth);
 	    if (res.address()) {
 		return synth;
 	    }
 	} catch (e) {
-	};
+	}
     }
     throw new Fluid4NodeError('Could create sytnth with ant driver from:' + drivers.join(', '))
 }
@@ -66,7 +91,7 @@ function initSynth(lib, settings, drivers) {
 function initSoundFonts(lib, synth, soundFonts) {
 
     var res = {};
-    return soundFonts.forEach(function (sfPath) {
+    soundFonts.forEach(function (sfPath) {
 	var sf2Id = lib.fluid_synth_sfload(synth, sfPath, 0);	
 	
 	if (res.hasOwnProperty(sfPath)) {
@@ -77,18 +102,35 @@ function initSoundFonts(lib, synth, soundFonts) {
 	}
 	res[sfPath] = sf2Id;
     });
-    console.log('soundFonts', res);
     return res;
 }
 
-module.exports = function(spec) {
-    spec = spec || {};
-    spec.drivers = spec.drivers || ['coremidi', 'dsound', 'jack', 'pulseaudio', 'alsa', 'winmidi', 'alsa_raw', 'alsa_seq'];
-    spec.libs = spec.libs || [
+var spec0 = {
+    'drivers': ['dsound', 'winmidi', 'jack','alsa', 'pulseaudio', 'alsa_raw', 'alsa_seq'],
+    'libs': [
 	'libs/win/libfluidsynth.dll',
 	'libs/linux/libfluidsynth.so.1'
-    ];
-    spec.soundFonts = spec.soundFonts || ['./sf2/FluidR3_GM.sf2'];
+    ],
+    'soundFonts': ['./sf2/FluidR3_GM.sf2']
+};
+
+var  specByOSType= {
+    'Linux': {
+	'drivers': ['jack','alsa', 'pulseaudio', 'alsa_raw', 'alsa_seq'],
+	'libs': [
+	    'libs/linux/libfluidsynth.so.1'
+	]
+    },
+    'Windows_NT': {
+	'drivers': ['dsound', 'winmidi'],
+    'libs': [
+	'libs/win/libfluidsynth.dll'
+    ],
+    }
+    
+};
+
+module.exports = function(spec) {
 
     var api = {
 	FLUID_FAILED: FLUID_FAILED,
@@ -97,8 +139,11 @@ module.exports = function(spec) {
 	}
     };
     
-    var lib = initLib(spec.libs);
-    if (spec.drivers.length > 0) {
+    if (spec) {
+	spec.drivers = spec.drivers || specByOSType[osType].drivers || spec0.drivers;
+	spec.libs = spec.libs || specByOSType[osType].libs || spec0.libs;
+	spec.soundFonts = spec.soundFonts || specByOSType[osType].soundFonts || spec0.soundFonts;
+	var lib = initLib(spec.libs);
 	var settings = lib.new_fluid_settings();
 	var synth = initSynth(lib, settings, spec.drivers);
 	if (spec.soundFonts.length > 0) {
@@ -117,12 +162,12 @@ module.exports = function(spec) {
 	    lib.fluid_synth_noteoff(synth, chan, key);
 	};
 	api.destroy = function () {
-	    for (key in soundFonts) {
-		lib.fluid_synth_sfunload(synth, key, 0);	
+	    for (var key in soundFonts) {
+		lib.fluid_synth_sfunload(synth, soundFonts[key], 0);	
 	    }
-	    lib.delete_fluid_synth(synth);
 	    lib.delete_fluid_settings(settings);
-	}
+	    lib.delete_fluid_synth(synth);
+	};
     }
 	
     return api;
