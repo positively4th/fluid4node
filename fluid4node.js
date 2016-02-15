@@ -1,4 +1,5 @@
 var os = require('os');
+var path = require('path');
 var ffi = require('ffi');
 var ref = require('ref');
 
@@ -14,15 +15,18 @@ var fluid_synth_t = ref.refType(ffi.types.void);
 var fluid_audio_driver_t = ref.refType(ffi.types.void);
 var fluid_settings_foreach_option_t = ref.refType(ffi.types.void);
 
-//console.log(ffi.types);
-console.log(ffi);
 function Fluid4NodeError(message) {
     this.name = 'Fluid4NodeError';
     this.message = message;
     this.stack = (new Error()).stack;
 }
 
-var libSpec = {
+function relPath(locPath) {
+    var res = path.normalize(__dirname + '/' + locPath);
+    return res;
+}
+
+    var libSpec = {
     'new_fluid_settings': [ fluid_settings_t, [] ],
     'delete_fluid_settings': ['void', [fluid_settings_t]],
     'fluid_settings_setstr': ['int', [fluid_settings_t, char_ptr, char_ptr]],
@@ -44,7 +48,7 @@ function initLib(libs) {
     var i = 0;
     while (i < libs.length && !res) {
 	try {
-	    res = ffi.Library(libs[i++], libSpec);
+	    res = ffi.Library(relPath(libs[i++]), libSpec);
 	} catch (e) {
 	    res = false;
 	}
@@ -92,7 +96,7 @@ function initSoundFonts(lib, synth, soundFonts) {
 
     var res = {};
     soundFonts.forEach(function (sfPath) {
-	var sf2Id = lib.fluid_synth_sfload(synth, sfPath, 0);	
+	var sf2Id = lib.fluid_synth_sfload(synth, relPath(sfPath), 0);	
 	
 	if (res.hasOwnProperty(sfPath)) {
 	    throw new Fluid4NodeError('Soundfont already loaded: ' + sfPath);
