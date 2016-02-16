@@ -22,7 +22,7 @@ function Fluid4NodeError(message) {
 }
 
 function relPath(locPath) {
-    var res = path.normalize(__dirname + '/' + locPath);
+    var res = locPath[0] !== '/' ? path.normalize(__dirname + '/' + locPath) : locPath;
     return res;
 }
 
