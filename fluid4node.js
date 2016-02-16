@@ -40,7 +40,6 @@ function relPath(locPath) {
     'fluid_synth_program_change': ['int', [fluid_synth_t, 'int', 'int']],
     'fluid_synth_set_gain': [ 'void', [ fluid_synth_t, 'float'] ],
     'fluid_settings_foreach_option': ['void', [fluid_settings_t, char_ptr, void_ptr, fluid_settings_foreach_option_t]]
-//    'fluid_settings_foreach_option': ['void', [fluid_settings_t, char_ptr, void_ptr, 'pointer']]
 };
 
 function initLib(libs) {

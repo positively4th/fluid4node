@@ -1,5 +1,7 @@
 try {
-    var f4n = require('./fluid4node.js')({});
+    var f4n = require('./fluid4node.js')({
+	'soundFonts': ['./sf2/FluidR3_GM.sf2']
+    });
 } catch (e) {
     console.log(e.message);
     throw (e);
