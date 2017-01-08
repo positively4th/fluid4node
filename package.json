@@ -1,6 +1,6 @@
 {
   "name": "fluid4node",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "FluidSynth node bindings.",
   "main": "fluid4node.js",
   "private": false,
@@ -19,10 +19,11 @@
     "type": "git",
     "url": "git+https://github.com/positively4th/fluid4node.git"
   },
-  "keywords": [
-    "synth",
-    "midi",
-    "node"
+    "keywords": [
+	"fluidsynth",
+	"synth",
+	"midi",
+	"node"
   ],
   "author": "Klas <klas.sanden@yahoo.se> (http://89.221.241.57/)",
   "license": "MIT",
