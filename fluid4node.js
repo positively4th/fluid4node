@@ -3,7 +3,6 @@ var path = require('path');
 var ffi = require('ffi');
 var ref = require('ref');
 
-
 var osType = os.type();
 
 var FLUID_FAILED = -1;
@@ -63,10 +62,12 @@ module.exports = function(spec) {
 	'new_fluid_synth': [fluid_synth_t, [fluid_settings_t]],
 	'delete_fluid_synth': ['int', [fluid_synth_t]],
 	'new_fluid_audio_driver': [fluid_audio_driver_t, [fluid_settings_t, fluid_synth_t]],
+	'delete_fluid_audio_driver': ['void', [fluid_audio_driver_t]], 	
 	'fluid_synth_sfload': ['int', [fluid_synth_t, char_ptr, 'int']],
 	'fluid_synth_sfunload': ['int', [fluid_synth_t, 'int', 'int']],
 	'fluid_synth_noteon': ['int', [fluid_synth_t, 'int', 'int', 'int']],
 	'fluid_synth_noteoff': ['int', [fluid_synth_t, 'int', 'int']],
+	'fluid_synth_bank_select': ['int', [fluid_synth_t, 'int', 'uint']],	 
 	'fluid_synth_program_change': ['int', [fluid_synth_t, 'int', 'int']],
 	'fluid_synth_set_gain': [ 'void', [ fluid_synth_t, 'float'] ],
 	'fluid_settings_foreach_option': ['void', [fluid_settings_t, char_ptr, void_ptr, fluid_settings_foreach_option_t]]
@@ -88,9 +89,7 @@ module.exports = function(spec) {
 	return res;
     }
 
-    function initSynth(lib, settings, drivers) {
-
-	var synth = lib.new_fluid_synth(settings);
+    function initSynth(lib, synth, settings, drivers) {
 
 	var driverMask = {};
 	lib.fluid_settings_foreach_option(settings, "audio.driver", null,
@@ -106,14 +105,14 @@ module.exports = function(spec) {
 	while (i < drivers.length) {
 	    drv = drivers[i++];
 	    if (!driverMask[drv]) {
-		console.log('Unknown driver: ' + drv);
+		console.log('Driver not available: ' + drv);
 		continue;
 	    }
 	    try {
 		lib.fluid_settings_setstr(settings, "audio.driver", drv);
 		res = lib.new_fluid_audio_driver(settings, synth);
 		if (res.address()) {
-		    return synth;
+		    return res;
 		}
 	    } catch (e) {
  	    }
@@ -152,7 +151,9 @@ module.exports = function(spec) {
 	spec.soundFonts = spec.soundFonts || specByOSType[osType].soundFonts || spec0.soundFonts;
 	var lib = initLib(spec.libs);
 	var settings = lib.new_fluid_settings();
-	var synth = initSynth(lib, settings, spec.drivers);
+	console.log('settings', settings);
+	var synth = lib.new_fluid_synth(settings);
+	var driver = initSynth(lib, synth, settings, spec.drivers);
 	if (spec.soundFonts.length > 0) {
 	    var soundFonts = initSoundFonts(lib, synth, spec.soundFonts);
 	}
@@ -161,6 +162,9 @@ module.exports = function(spec) {
 	};
 	api.programChange = function (chan, program) {
 	    return lib.fluid_synth_program_change(synth, chan, program);
+	};
+	api.bankSelect = function (chan, bank) {
+	    return lib.fluid_synth_program_change(synth, chan, bank);
 	};
 	api.noteOn = function (chan, key, vel) {
 	    lib.fluid_synth_noteon(synth, chan, key, vel);
@@ -172,8 +176,9 @@ module.exports = function(spec) {
 	    for (var key in soundFonts) {
 		lib.fluid_synth_sfunload(synth, soundFonts[key], 0);	
 	    }
-	    lib.delete_fluid_settings(settings);
 	    lib.delete_fluid_synth(synth);
+	    lib.delete_fluid_audio_driver(driver);
+	    lib.delete_fluid_settings(settings);
 	};
     }
     

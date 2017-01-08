@@ -1,5 +1,6 @@
 try {
     var f4n = require('./fluid4node.js')({
+	'drivers': ['alsa', 'pulseaudio', 'jack', 'alsa_raw', 'alsa_seq'],
 	'soundFonts': ['./sf2/FluidR3_GM.sf2']
     });
 } catch (e) {
@@ -9,14 +10,14 @@ try {
 console.log('f4n', f4n);
     
 var todos = [
-    {chan: 0, program: 0, key: 60, gain: 1.0},
-    {chan: 0, program: 0, key: 61, gain: 0.7},
-    {chan: 0, program: 0, key: 62, gain: 0.4},
-    {chan: 0, program: 0, key: 63, gain: 0.1},
-    {chan: 1, program: 30, key: 63, gain: 0.1},
-    {chan: 1, program: 30, key: 62, gain: 0.4},
-    {chan: 1, program: 30, key: 61, gain: 0.7},
-    {chan: 1, program: 30, key: 60, gain: 1.0},
+    {chan: 0, program: 0, bank: 0, key: 60, gain: 1.0},
+    {chan: 0, program: 0, bank: 0, key: 61, gain: 0.7},
+    {chan: 0, program: 0, bank: 0, key: 62, gain: 0.4},
+    {chan: 0, program: 0, bank: 0, key: 63, gain: 0.1},
+    {chan: 1, program: 30, bank: 0, key: 63, gain: 0.1},
+    {chan: 1, program: 30, bank: 0, key: 62, gain: 0.4},
+    {chan: 1, program: 30, bank: 0, key: 61, gain: 0.7},
+    {chan: 1, program: 30, bank: 0, key: 60, gain: 1.0},
 ];
 
 function helper(index) {
@@ -29,6 +30,8 @@ function helper(index) {
 	return;
     }
 
+    console.log(todos[index]);
+    f4n.bankSelect(todos[index].chan, todos[index].bank);
     f4n.programChange(todos[index].chan, todos[index].program);
     f4n.setGain(todos[index].gain);
     f4n.noteOn(todos[index].chan, todos[index].key, 100);
