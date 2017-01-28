@@ -1,8 +1,5 @@
 try {
-    var f4n = require('./fluid4node.js')({
-	'drivers': ['alsa', 'pulseaudio', 'jack', 'alsa_raw', 'alsa_seq'],
-	'soundFonts': ['./sf2/FluidR3_GM.sf2']
-    });
+    var f4n = require('./fluid4node.js')({});
 } catch (e) {
     console.log(e.message);
     throw (e);
