@@ -24,7 +24,7 @@ The RPi can be ARM v6 or v7, each of which require a different build of `libflui
 
 On a Debian distro on RPi, you can use `dpkg -L libfluidsynth1` to get a list of all the files installed for `libfluidsynth` (use `apt install libfluidsynth1` to install it).
 
-Find the path to the `libfluidsynth.so.1`, and pass this in as the value for `drivers`, for example:
+Find the path to the `libfluidsynth.so.1`, and pass this in as the value for `libs`, for example:
 
 ```javascript
 const f4n = require('fluid4node')({
