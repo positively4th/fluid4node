@@ -40,7 +40,7 @@ export type FLUID_OUTCOME = typeof FLUID_FAILED | typeof FLUID_OK;
 
 export interface FluidSynthLib {
   new_fluid_settings: () => any;
-  delete_fluid_settings: (settings: any) => Promise<any>;
+  delete_fluid_settings: (settings: any) => void;
   fluid_settings_setstr: (
     settings: any,
     name: string,
@@ -52,17 +52,21 @@ export interface FluidSynthLib {
     value: number
   ) => FLUID_OUTCOME;
   new_fluid_synth: (settings: any) => any;
-  delete_fluid_synth: (synth: any) => any;
+  delete_fluid_synth: (synth: any) => FLUID_OUTCOME;
   new_fluid_audio_driver: () => any;
-  delete_fluid_audio_driver: (driver: any) => any;
-  fluid_synth_sfload: (synth: any, sfPath: string, key: 0) => any;
-  fluid_synth_sfunload: (synth: any, soundFont: number, key: 0) => any;
+  delete_fluid_audio_driver: (driver: any) => void;
+  fluid_synth_sfload: (synth: any, sfPath: string, key: 0) => FLUID_OUTCOME;
+  fluid_synth_sfunload: (
+    synth: any,
+    soundFont: number,
+    key: 0
+  ) => FLUID_OUTCOME;
   fluid_synth_noteon: (
     synth: any,
     chan: number,
     key: number,
     vel: number
-  ) => any;
+  ) => FLUID_OUTCOME;
   fluid_synth_noteoff: (synth: any, chan: number, key: number) => FLUID_OUTCOME;
   fluid_synth_bank_select: (
     synth: any,
@@ -73,8 +77,13 @@ export interface FluidSynthLib {
     synth: any,
     chan: number,
     program: number
-  ) => any;
+  ) => FLUID_OUTCOME;
   fluid_synth_set_gain: (synth: any, gain: number) => void;
   fluid_synth_set_polyphony: (synth: any, voices: number) => FLUID_OUTCOME;
-  fluid_settings_foreach_option: () => any;
+  fluid_settings_foreach_option: (
+    settings: any,
+    name: string,
+    data: any,
+    callback: any
+  ) => void;
 }
