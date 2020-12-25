@@ -179,7 +179,7 @@ export = (spec: Partial<Spec> = {}) => {
       return lib;
     },
     getFailedLibs: () => [],
-    setGain: (gain: number): void => lib.fluid_synth_set_gain(synth, gain),
+    setGain: (gain: number) => lib.fluid_synth_set_gain(synth, gain),
     /**
      *
      * @param voices - number of voices: 1-256
@@ -187,13 +187,13 @@ export = (spec: Partial<Spec> = {}) => {
     setPolyphony: (voices: number) =>
       lib.fluid_synth_set_polyphony(synth, voices),
     getSynth: () => synth,
-    programChange: (chan: number, program: number): number =>
+    programChange: (chan: number, program: number) =>
       lib.fluid_synth_program_change(synth, chan, program),
-    bankSelect: (chan: number, bank: number): number =>
+    bankSelect: (chan: number, bank: number) =>
       lib.fluid_synth_program_change(synth, chan, bank),
-    noteOn: (chan: number, key: number, vel: number): number =>
+    noteOn: (chan: number, key: number, vel: number) =>
       lib.fluid_synth_noteon(synth, chan, key, vel),
-    noteOff: (chan: number, key: number): number =>
+    noteOff: (chan: number, key: number) =>
       lib.fluid_synth_noteoff(synth, chan, key),
     destroy: () => {
       for (var key in soundFonts) {
