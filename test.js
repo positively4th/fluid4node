@@ -30,10 +30,10 @@ function helper(index) {
     }
 
     console.log(todos[index]);
-    'bankSelect', f4n.bankSelect(todos[index].chan, todos[index].bank);
-    'programChange', f4n.programChange(todos[index].chan, todos[index].program);
-    'setGain', f4n.setGain(todos[index].gain);
-    'noteOn', f4n.noteOn(todos[index].chan, todos[index].key, 100);
+    f4n.bankSelect(todos[index].chan, todos[index].bank);
+    f4n.programChange(todos[index].chan, todos[index].program);
+    f4n.setGain(todos[index].gain);
+    f4n.noteOn(todos[index].chan, todos[index].key, 100);
     setTimeout(function () {
         helper(index + 1);
     }, 200);
