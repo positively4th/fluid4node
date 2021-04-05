@@ -147,6 +147,7 @@ module.exports = (spec = {}) => {
         bankSelect: (chan, bank) => lib.fluid_synth_program_change(synth, chan, bank),
         noteOn: (chan, key, vel) => lib.fluid_synth_noteon(synth, chan, key, vel),
         noteOff: (chan, key) => lib.fluid_synth_noteoff(synth, chan, key),
+        cc: (chan, num, val) => lib.fluid_synth_cc(synth, chan, num, val),
         destroy: () => {
             for (var key in soundFonts) {
                 lib.fluid_synth_sfunload(synth, soundFonts[key], 0);

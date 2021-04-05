@@ -35,6 +35,7 @@ void FluidSynth::Init(v8::Local<v8::Object> exports, v8::Local<v8::Object> modul
   Nan::SetPrototypeMethod(tpl, "synth_noteoff", FluidSynth::synth_noteoff);
   Nan::SetPrototypeMethod(tpl, "synth_program_change", FluidSynth::synth_program_change);
   Nan::SetPrototypeMethod(tpl, "synth_set_gain", FluidSynth::synth_set_gain);
+  Nan::SetPrototypeMethod(tpl, "synth_cc", FluidSynth::synth_cc);
 
   constructor.Reset(tpl->GetFunction());
   v8::Local<v8::String> xkey = Nan::New("exports").ToLocalChecked();
@@ -112,6 +113,15 @@ NAN_METHOD(FluidSynth::synth_set_gain) {
   FluidSynth* _this = ObjectWrap::Unwrap<FluidSynth>(info.This());
   float gain = info[0]->NumberValue();	
   fluid_synth_set_gain(_this->synth.get(), gain);	
+}
+
+NAN_METHOD(FluidSynth::synth_cc) {
+  FluidSynth* _this = ObjectWrap::Unwrap<FluidSynth>(info.This());
+  int chan = info[0]->IntegerValue();	
+  int num = info[1]->IntegerValue();	
+  int val = info[2]->IntegerValue();	
+  v8::Local<v8::Value> res = Nan::New<v8::Integer>(fluid_synth_cc(_this->synth.get(), chan, num, val));	
+  info.GetReturnValue().Set(res);	 
 }
 
 

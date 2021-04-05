@@ -31,6 +31,7 @@ exports.libSpec = {
     fluid_synth_bank_select: ["int", [fluid_synth_t, "int", "uint"]],
     fluid_synth_program_change: ["int", [fluid_synth_t, "int", "int"]],
     fluid_synth_set_gain: ["void", [fluid_synth_t, "float"]],
+    fluid_synth_cc: ["void", [fluid_synth_t, "int", "int", "int"]],
     fluid_synth_set_polyphony: ["int", [fluid_synth_t, "int"]],
     fluid_settings_foreach_option: [
         "void",

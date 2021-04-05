@@ -23,6 +23,7 @@ declare const _default: (spec?: Partial<Spec>) => {
     bankSelect: (chan: number, bank: number) => import("./api-wrapper").FLUID_OUTCOME;
     noteOn: (chan: number, key: number, vel: number) => import("./api-wrapper").FLUID_OUTCOME;
     noteOff: (chan: number, key: number) => import("./api-wrapper").FLUID_OUTCOME;
+    cc: (chan: number, num: number, val: number) => import("./api-wrapper").FLUID_OUTCOME;
     destroy: () => void;
 };
 export = _default;

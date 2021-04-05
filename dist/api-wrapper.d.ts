@@ -17,6 +17,7 @@ export declare const libSpec: {
     fluid_synth_bank_select: (string | (string | ref.Type)[])[];
     fluid_synth_program_change: (string | (string | ref.Type)[])[];
     fluid_synth_set_gain: (string | (string | ref.Type)[])[];
+    fluid_synth_cc: (string | (string | ref.Type)[])[];
     fluid_synth_set_polyphony: (string | (string | ref.Type)[])[];
     fluid_settings_foreach_option: (string | ref.Type[])[];
 };
@@ -39,6 +40,7 @@ export interface FluidSynthLib {
     fluid_synth_bank_select: (synth: any, chan: number, bank: number) => FLUID_OUTCOME;
     fluid_synth_program_change: (synth: any, chan: number, program: number) => FLUID_OUTCOME;
     fluid_synth_set_gain: (synth: any, gain: number) => void;
+    fluid_synth_cc: (synth: any, chan: number, num: number, val: number) => FLUID_OUTCOME;
     fluid_synth_set_polyphony: (synth: any, voices: number) => FLUID_OUTCOME;
     fluid_settings_foreach_option: (settings: any, name: string, data: any, callback: any) => void;
 }
