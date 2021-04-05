@@ -1,0 +1,45 @@
+import ref from "ref-napi";
+export declare const char_ptr: ref.Type;
+export declare const void_ptr: ref.Type;
+export declare const libSpec: {
+    new_fluid_settings: (ref.Type | never[])[];
+    delete_fluid_settings: (string | ref.Type[])[];
+    fluid_settings_setstr: (string | ref.Type[])[];
+    fluid_settings_setnum: (string | (string | ref.Type)[])[];
+    new_fluid_synth: (ref.Type | ref.Type[])[];
+    delete_fluid_synth: (string | ref.Type[])[];
+    new_fluid_audio_driver: (ref.Type | ref.Type[])[];
+    delete_fluid_audio_driver: (string | ref.Type[])[];
+    fluid_synth_sfload: (string | (string | ref.Type)[])[];
+    fluid_synth_sfunload: (string | (string | ref.Type)[])[];
+    fluid_synth_noteon: (string | (string | ref.Type)[])[];
+    fluid_synth_noteoff: (string | (string | ref.Type)[])[];
+    fluid_synth_bank_select: (string | (string | ref.Type)[])[];
+    fluid_synth_program_change: (string | (string | ref.Type)[])[];
+    fluid_synth_set_gain: (string | (string | ref.Type)[])[];
+    fluid_synth_set_polyphony: (string | (string | ref.Type)[])[];
+    fluid_settings_foreach_option: (string | ref.Type[])[];
+};
+declare const FLUID_FAILED = -1;
+declare const FLUID_OK = 0;
+export declare type FLUID_OUTCOME = typeof FLUID_FAILED | typeof FLUID_OK;
+export interface FluidSynthLib {
+    new_fluid_settings: () => any;
+    delete_fluid_settings: (settings: any) => void;
+    fluid_settings_setstr: (settings: any, name: string, value: string) => FLUID_OUTCOME;
+    fluid_settings_setnum: (settings: any, name: string, value: number) => FLUID_OUTCOME;
+    new_fluid_synth: (settings: any) => any;
+    delete_fluid_synth: (synth: any) => FLUID_OUTCOME;
+    new_fluid_audio_driver: () => any;
+    delete_fluid_audio_driver: (driver: any) => void;
+    fluid_synth_sfload: (synth: any, sfPath: string, key: 0) => FLUID_OUTCOME;
+    fluid_synth_sfunload: (synth: any, soundFont: number, key: 0) => FLUID_OUTCOME;
+    fluid_synth_noteon: (synth: any, chan: number, key: number, vel: number) => FLUID_OUTCOME;
+    fluid_synth_noteoff: (synth: any, chan: number, key: number) => FLUID_OUTCOME;
+    fluid_synth_bank_select: (synth: any, chan: number, bank: number) => FLUID_OUTCOME;
+    fluid_synth_program_change: (synth: any, chan: number, program: number) => FLUID_OUTCOME;
+    fluid_synth_set_gain: (synth: any, gain: number) => void;
+    fluid_synth_set_polyphony: (synth: any, voices: number) => FLUID_OUTCOME;
+    fluid_settings_foreach_option: (settings: any, name: string, data: any, callback: any) => void;
+}
+export {};
