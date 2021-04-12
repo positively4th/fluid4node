@@ -27,6 +27,7 @@ export const libSpec = {
   fluid_synth_bank_select: ["int", [fluid_synth_t, "int", "uint"]],
   fluid_synth_program_change: ["int", [fluid_synth_t, "int", "int"]],
   fluid_synth_set_gain: ["void", [fluid_synth_t, "float"]],
+  fluid_synth_cc: ["void", [fluid_synth_t, "int", "int", "int"]],
   fluid_synth_set_polyphony: ["int", [fluid_synth_t, "int"]],
   fluid_settings_foreach_option: [
     "void",
@@ -79,6 +80,12 @@ export interface FluidSynthLib {
     program: number
   ) => FLUID_OUTCOME;
   fluid_synth_set_gain: (synth: any, gain: number) => void;
+  fluid_synth_cc: (
+    synth: any,
+    chan: number,
+    num: number,
+    val: number
+  ) => FLUID_OUTCOME;
   fluid_synth_set_polyphony: (synth: any, voices: number) => FLUID_OUTCOME;
   fluid_settings_foreach_option: (
     settings: any,

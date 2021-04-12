@@ -31,6 +31,7 @@ class FluidSynth : public node::ObjectWrap {
   static NAN_METHOD(synth_noteoff);
   static NAN_METHOD(synth_program_change);
   static NAN_METHOD(synth_set_gain);
+  static NAN_METHOD(synth_cc);
   static NAN_METHOD(New);
     
   static Nan::Persistent<v8::Function> constructor;

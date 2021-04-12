@@ -7,8 +7,8 @@
   "gypfile": false,
   "dependencies": {
     "debug": "^4.3.1",
-    "ffi-napi": "^3.1.0",
-    "ref-napi": "^2.1.2"
+    "ffi-napi": "^4.0.3",
+    "ref-napi": "^3.0.2"
   },
   "directories": {
     "test": "test"
